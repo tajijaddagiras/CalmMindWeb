@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
   
   // Define public routes
-  const isPublicRoute = path === "/login" || path.startsWith("/api/public");
+  const isPublicRoute = path === "/login" || path === "/register" || path.startsWith("/api/public");
   
   // Read session cookie
   const session = req.cookies.get("session")?.value;
