@@ -45,7 +45,7 @@ export default function BreathePage() {
 
   return (
     <div className="p-6 min-h-screen flex flex-col bg-purple-accent/5">
-      <header className="mb-8 mt-4">
+      <header className="mb-8 mt-4 relative z-10">
         <Link href="/meditasi" className="text-text-secondary hover:text-purple-accent flex items-center w-fit">
           <ChevronLeft size={20} /> <span className="ml-1 text-sm font-medium">Kembali</span>
         </Link>

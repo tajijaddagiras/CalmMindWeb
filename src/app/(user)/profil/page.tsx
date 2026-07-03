@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { logout } from "@/app/actions/auth";
-import { User, TrendingUp, BookOpen, Star, LogOut } from "lucide-react";
+import { User, TrendingUp, BookOpen, Star, LogOut, ChevronRight } from "lucide-react";
 
 export default async function ProfilPage() {
   const session = await getSession();
@@ -92,14 +93,20 @@ export default async function ProfilPage() {
 
       {/* Menu */}
       <div className="bg-white border border-lavender-soft/50 rounded-2xl overflow-hidden shadow-sm mb-6">
-        <div className="flex items-center space-x-3 p-4 border-b border-lavender-soft/30">
-          <BookOpen size={20} className="text-purple-accent" />
-          <span className="text-sm font-medium text-text-main">Artikel Tersimpan</span>
-        </div>
-        <div className="flex items-center space-x-3 p-4">
-          <Star size={20} className="text-purple-accent" />
-          <span className="text-sm font-medium text-text-main">Riwayat Konsultasi</span>
-        </div>
+        <Link href="/artikel?saved=true" className="w-full flex items-center justify-between p-4 border-b border-lavender-soft/30 hover:bg-lavender-soft/10 transition">
+          <div className="flex items-center space-x-3">
+            <BookOpen size={20} className="text-purple-accent" />
+            <span className="text-sm font-medium text-text-main">Artikel Tersimpan</span>
+          </div>
+          <ChevronRight size={16} className="text-text-secondary" />
+        </Link>
+        <Link href="/konsultasi?history=true" className="w-full flex items-center justify-between p-4 hover:bg-lavender-soft/10 transition">
+          <div className="flex items-center space-x-3">
+            <Star size={20} className="text-purple-accent" />
+            <span className="text-sm font-medium text-text-main">Riwayat Konsultasi</span>
+          </div>
+          <ChevronRight size={16} className="text-text-secondary" />
+        </Link>
       </div>
 
       {/* Logout */}

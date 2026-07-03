@@ -6,37 +6,39 @@ import ArtikelClient from "./ArtikelClient";
 export default async function ArtikelPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; q?: string }>;
+  searchParams: Promise<{ category?: string; q?: string; saved?: string }>;
 }) {
   const session = await getSession();
   if (!session?.userId) redirect("/login");
 
-  const { category, q } = await searchParams;
+  const { category, q, saved } = await searchParams;
 
-  const [articles, savedArticles] = await Promise.all([
-    prisma.article.findMany({
-      where: {
-        ...(category ? { category } : {}),
-        ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
-      },
-      orderBy: { createdAt: "desc" },
-    }),
-    prisma.savedArticle.findMany({
-      where: { userId: session.userId },
-      select: { articleId: true },
-    }),
-  ]);
+  const savedArticles = await prisma.savedArticle.findMany({
+    where: { userId: session.userId },
+    select: { articleId: true },
+  });
 
-  const savedIds = new Set(savedArticles.map((s) => s.articleId));
+  const savedIds = savedArticles.map((s) => s.articleId);
+
+  const articles = await prisma.article.findMany({
+    where: {
+      ...(category ? { category } : {}),
+      ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
+      ...(saved === "true" ? { id: { in: savedIds } } : {}),
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
   const categories = ["Overthinking", "Manajemen Stres", "Pengembangan Diri"];
 
   return (
     <ArtikelClient
       articles={articles}
-      savedIds={[...savedIds]}
+      savedIds={savedIds}
       categories={categories}
       activeCategory={category || ""}
       searchQuery={q || ""}
+      showOnlySaved={saved === "true"}
     />
   );
 }

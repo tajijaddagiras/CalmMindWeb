@@ -19,12 +19,14 @@ export default function ArtikelClient({
   categories,
   activeCategory,
   searchQuery,
+  showOnlySaved = false,
 }: {
   articles: Article[];
   savedIds: string[];
   categories: string[];
   activeCategory: string;
   searchQuery: string;
+  showOnlySaved?: boolean;
 }) {
   const router = useRouter();
   const [saved, setSaved] = useState<Set<string>>(new Set(savedIds));
@@ -46,6 +48,7 @@ export default function ArtikelClient({
     const params = new URLSearchParams();
     if (search) params.set("q", search);
     if (activeCategory) params.set("category", activeCategory);
+    if (showOnlySaved) params.set("saved", "true");
     router.push(`/artikel?${params.toString()}`);
   };
 
@@ -53,6 +56,7 @@ export default function ArtikelClient({
     const params = new URLSearchParams();
     if (cat && cat !== activeCategory) params.set("category", cat);
     if (search) params.set("q", search);
+    if (showOnlySaved) params.set("saved", "true");
     router.push(`/artikel?${params.toString()}`);
   };
 
@@ -90,7 +94,18 @@ export default function ArtikelClient({
 
   return (
     <div className="p-6 min-h-screen">
-      <h1 className="text-2xl font-semibold mt-4 mb-6">Artikel</h1>
+      {showOnlySaved && (
+        <button
+          onClick={() => router.push("/profil")}
+          className="flex items-center text-text-secondary hover:text-purple-accent mb-4 mt-4"
+        >
+          <ChevronLeft size={20} />
+          <span className="ml-1 text-sm font-medium">Kembali ke Profil</span>
+        </button>
+      )}
+      <h1 className="text-2xl font-semibold mt-4 mb-6">
+        {showOnlySaved ? "Artikel Tersimpan" : "Artikel"}
+      </h1>
 
       {/* Search */}
       <form onSubmit={handleSearch} className="relative mb-5">

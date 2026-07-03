@@ -3,6 +3,7 @@
 import { useState, useActionState, useEffect } from "react";
 import { bookSession } from "@/app/actions/konsultasi";
 import { Star, ChevronLeft, Calendar, Clock, CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type Psychologist = {
   id: string;
@@ -27,15 +28,19 @@ const timeSlots = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00", "16:00"
 export default function KonsultasiClient({
   psychologists,
   sessions,
+  showOnlyHistory = false,
 }: {
   psychologists: Psychologist[];
   sessions: Session[];
+  showOnlyHistory?: boolean;
 }) {
   const [selectedPsycho, setSelectedPsycho] = useState<Psychologist | null>(null);
   const [bookingStep, setBookingStep] = useState<"detail" | "booking" | "success">("detail");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [state, action, isPending] = useActionState(bookSession, undefined);
+  
+  const router = useRouter();
 
   useEffect(() => {
     if (state?.success) setBookingStep("success");
@@ -200,7 +205,47 @@ export default function KonsultasiClient({
     );
   }
 
-  // === LIST ===
+  // === LIST / HISTORY ===
+  if (showOnlyHistory) {
+    return (
+      <div className="p-6 min-h-screen">
+        <button
+          onClick={() => router.push("/profil")}
+          className="flex items-center text-text-secondary hover:text-purple-accent mb-4 mt-4"
+        >
+          <ChevronLeft size={20} />
+          <span className="ml-1 text-sm font-medium">Kembali ke Profil</span>
+        </button>
+        <h1 className="text-2xl font-semibold mt-4 mb-6">Riwayat Konsultasi</h1>
+
+        {sessions.length === 0 ? (
+          <p className="text-sm text-text-secondary">Kamu belum memiliki riwayat sesi konsultasi.</p>
+        ) : (
+          <div className="space-y-3">
+            {sessions.map((s) => (
+              <div key={s.id} className="bg-white border border-lavender-soft/50 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+                <div>
+                  <p className="text-sm font-semibold text-text-main">{s.psychologist.name}</p>
+                  <p className="text-xs text-text-secondary flex items-center mt-1">
+                    <Calendar size={11} className="mr-1" />
+                    {new Date(s.date).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  </p>
+                </div>
+                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${
+                  s.status === "SCHEDULED" ? "bg-lavender-soft text-purple-accent" :
+                  s.status === "COMPLETED" ? "bg-green-soft/20 text-green-soft" :
+                  "bg-coral-soft/20 text-coral-soft"
+                }`}>
+                  {s.status === "SCHEDULED" ? "Terjadwal" : s.status === "COMPLETED" ? "Selesai" : "Dibatalkan"}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 min-h-screen">
       <h1 className="text-2xl font-semibold mt-4 mb-2">Konsultasi</h1>
@@ -231,7 +276,7 @@ export default function KonsultasiClient({
         ))}
       </div>
 
-      {/* Riwayat Sesi */}
+      {/* Riwayat Sesi (Di halaman utama konsultasi tetap bisa muncul) */}
       {sessions.length > 0 && (
         <>
           <h2 className="font-semibold text-lg mb-4">Riwayat Sesi</h2>
