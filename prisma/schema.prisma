@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  moodChecks MoodCheck[]
+  journals   JournalEntry[]
+  savedArticles SavedArticle[]
+  communityPosts CommunityPost[]
+  communityComments CommunityComment[]
+  consultations ConsultationSession[]
+}
+
+model MoodCheck {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mood      String   // e.g., "senang", "cemas", "sedih", "marah", "netral"
+  note      String?
+  createdAt DateTime @default(now())
+}
+
+model JournalEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String?
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// === FR-4: Artikel ===
+model Article {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.Text
+  category  String
+  imageUrl  String?
+  createdAt DateTime @default(now())
+
+  savedBy   SavedArticle[]
+}
+
+model SavedArticle {
+  id        String   @id @default(cuid())
+  userId    String
+  articleId String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, articleId])
+}
+
+// === FR-5: Calm Circle ===
+model CommunityGroup {
+  id        String   @id @default(cuid())
+  name      String
+  topic     String
+  createdAt DateTime @default(now())
+
+  posts     CommunityPost[]
+}
+
+model CommunityPost {
+  id        String   @id @default(cuid())
+  groupId   String
+  authorId  String
+  content   String   @db.Text
+  isAnonymous Boolean @default(true)
+  createdAt DateTime @default(now())
+
+  group     CommunityGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  author    User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  comments  CommunityComment[]
+}
+
+model CommunityComment {
+  id        String   @id @default(cuid())
+  postId    String
+  authorId  String
+  content   String   @db.Text
+  isAnonymous Boolean @default(true)
+  createdAt DateTime @default(now())
+
+  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author    User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+// === FR-6: Konsultasi ===
+model Psychologist {
+  id             String   @id @default(cuid())
+  name           String
+  specialization String
+  rating         Float
+  price          Int
+  photoUrl       String?
+  experience     Int      // in years
+  about          String   @db.Text
+  
+  sessions       ConsultationSession[]
+}
+
+model ConsultationSession {
+  id             String   @id @default(cuid())
+  userId         String
+  psychologistId String
+  date           DateTime
+  status         String   @default("SCHEDULED") // SCHEDULED, COMPLETED, CANCELLED
+  createdAt      DateTime @default(now())
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  psychologist   Psychologist @relation(fields: [psychologistId], references: [id], onDelete: Cascade)
+}
+
