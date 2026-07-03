@@ -26,6 +26,15 @@ export default async function CalmCirclePage({
         orderBy: { createdAt: "desc" },
         include: {
           _count: { select: { comments: true } },
+          comments: {
+            orderBy: { createdAt: "asc" },
+            select: {
+              id: true,
+              content: true,
+              isAnonymous: true,
+              createdAt: true,
+            },
+          },
         },
       })
     : [];
