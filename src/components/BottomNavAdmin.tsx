@@ -15,7 +15,7 @@ export default function BottomNavAdmin() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white border-t border-lavender-soft z-50">
+    <div className="bg-white/95 backdrop-blur-md border-t border-lavender-soft/60 z-50 rounded-t-3xl shadow-[0_-4px_24px_rgba(149,103,226,0.12)] shrink-0">
       <nav className="flex justify-around items-center h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -28,9 +28,8 @@ export default function BottomNavAdmin() {
             <Link
               key={item.name}
               href={item.path}
-              className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
-                isActive ? "text-purple-accent" : "text-text-secondary"
-              }`}
+              className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${isActive ? "text-purple-accent" : "text-text-secondary"
+                }`}
             >
               <Icon size={24} className={isActive ? "fill-lavender-soft/30" : ""} />
               <span className="text-xs font-medium">{item.name}</span>
