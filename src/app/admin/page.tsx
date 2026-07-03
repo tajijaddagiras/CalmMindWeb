@@ -36,49 +36,49 @@ export default async function AdminDashboard() {
   ];
 
   return (
-    <div>
+    <div className="p-6">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Dashboard Admin</h2>
-          <p className="text-sm text-gray-500 mt-1">Ringkasan sistem CalmMind</p>
+          <h2 className="text-2xl font-bold text-text-main">Dashboard Admin</h2>
+          <p className="text-sm text-text-secondary mt-1">Ringkasan sistem CalmMind</p>
         </div>
         <form action={logout}>
-          <button type="submit" className="flex items-center space-x-2 text-sm text-coral-soft hover:bg-red-50 px-4 py-2 rounded-lg transition">
-            <LogOut size={16} />
+          <button type="submit" className="flex items-center space-x-1 text-xs text-coral-soft hover:bg-coral-soft/10 px-3 py-2 rounded-lg transition border border-coral-soft/30">
+            <LogOut size={14} />
             <span>Keluar</span>
           </button>
         </form>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 gap-3 mb-8">
         {stats.map((s) => (
-          <div key={s.label} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <p className="text-sm text-gray-500 mb-2">{s.label}</p>
-            <p className={`text-3xl font-bold ${s.color}`}>{s.value}</p>
+          <div key={s.label} className="bg-lavender-soft/20 p-4 rounded-2xl border border-lavender-soft/50 text-center">
+            <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
+            <p className="text-xs text-text-secondary mt-1">{s.label}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-6">
         {/* Recent Users */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h3 className="font-bold text-gray-700 mb-4 flex items-center">
-            <Users size={18} className="mr-2 text-purple-accent" />
+        <div className="bg-white rounded-2xl shadow-sm border border-lavender-soft/50 p-5">
+          <h3 className="font-bold text-sm text-text-main mb-4 flex items-center">
+            <Users size={16} className="mr-2 text-purple-accent" />
             Pengguna Terbaru
           </h3>
           {recentUsers.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">Belum ada pengguna.</p>
+            <p className="text-xs text-text-secondary text-center py-2">Belum ada pengguna.</p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {recentUsers.map((u) => (
                 <div key={u.id} className="flex items-center space-x-3">
-                  <div className="w-9 h-9 bg-lavender-soft rounded-full flex items-center justify-center text-sm font-bold text-purple-accent">
+                  <div className="w-10 h-10 bg-lavender-soft rounded-full flex items-center justify-center text-sm font-bold text-purple-accent flex-shrink-0">
                     {(u.name || u.email).charAt(0).toUpperCase()}
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{u.name || "—"}</p>
-                    <p className="text-xs text-gray-400">{u.email}</p>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-text-main truncate">{u.name || "—"}</p>
+                    <p className="text-xs text-text-secondary truncate">{u.email}</p>
                   </div>
                 </div>
               ))}
@@ -87,22 +87,22 @@ export default async function AdminDashboard() {
         </div>
 
         {/* Quick Links */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-          <h3 className="font-bold text-gray-700 mb-4 flex items-center">
-            <Activity size={18} className="mr-2 text-purple-accent" />
-            Pengelolaan Data
+        <div className="bg-white rounded-2xl shadow-sm border border-lavender-soft/50 p-5">
+          <h3 className="font-bold text-sm text-text-main mb-3 flex items-center">
+            <Activity size={16} className="mr-2 text-purple-accent" />
+            Akses Cepat
           </h3>
           <div className="space-y-2">
-            <Link href="/admin/users" className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition text-sm text-gray-700">
-              <Users size={16} className="text-purple-accent" />
+            <Link href="/admin/users" className="flex items-center space-x-3 p-3 rounded-xl hover:bg-lavender-soft/20 transition text-sm text-text-main font-medium border border-transparent hover:border-lavender-soft/50">
+              <Users size={18} className="text-purple-accent" />
               <span>Kelola Pengguna</span>
             </Link>
-            <Link href="/admin/artikel" className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition text-sm text-gray-700">
-              <BookOpen size={16} className="text-purple-accent" />
+            <Link href="/admin/artikel" className="flex items-center space-x-3 p-3 rounded-xl hover:bg-lavender-soft/20 transition text-sm text-text-main font-medium border border-transparent hover:border-lavender-soft/50">
+              <BookOpen size={18} className="text-purple-accent" />
               <span>Kelola Artikel</span>
             </Link>
-            <Link href="/admin/psikolog" className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition text-sm text-gray-700">
-              <ShieldAlert size={16} className="text-purple-accent" />
+            <Link href="/admin/psikolog" className="flex items-center space-x-3 p-3 rounded-xl hover:bg-lavender-soft/20 transition text-sm text-text-main font-medium border border-transparent hover:border-lavender-soft/50">
+              <ShieldAlert size={18} className="text-purple-accent" />
               <span>Kelola Psikolog</span>
             </Link>
           </div>

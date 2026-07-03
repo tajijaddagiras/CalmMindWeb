@@ -12,33 +12,27 @@ export default async function AdminArtikel() {
   });
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Kelola Artikel</h2>
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
-            <tr>
-              <th className="px-6 py-3 text-left">Judul</th>
-              <th className="px-6 py-3 text-left">Kategori</th>
-              <th className="px-6 py-3 text-center">Disimpan</th>
-              <th className="px-6 py-3 text-left">Tanggal</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-50">
-            {articles.map((a) => (
-              <tr key={a.id} className="hover:bg-gray-50/50">
-                <td className="px-6 py-4 font-medium text-gray-800 max-w-xs truncate">{a.title}</td>
-                <td className="px-6 py-4">
-                  <span className="bg-lavender-soft text-purple-accent text-xs px-2 py-1 rounded-full font-medium">{a.category}</span>
-                </td>
-                <td className="px-6 py-4 text-center">{a._count.savedBy}</td>
-                <td className="px-6 py-4 text-gray-400">
+    <div className="p-6">
+      <h2 className="text-2xl font-bold text-text-main mb-6">Kelola Artikel</h2>
+      <div className="space-y-4">
+        {articles.length === 0 ? (
+          <p className="text-sm text-text-secondary text-center py-8">Belum ada artikel.</p>
+        ) : (
+          articles.map((a) => (
+            <div key={a.id} className="bg-white rounded-2xl shadow-sm border border-lavender-soft/50 p-5">
+              <span className="bg-lavender-soft text-purple-accent text-[10px] px-2 py-1 rounded-full font-semibold">
+                {a.category}
+              </span>
+              <h3 className="font-semibold text-text-main mt-2 mb-1">{a.title}</h3>
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-lavender-soft/30 text-xs text-text-secondary">
+                <span>Disimpan: <strong className="text-purple-accent">{a._count.savedBy}x</strong></span>
+                <span>
                   {new Date(a.createdAt).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </span>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
